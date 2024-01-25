@@ -12,7 +12,7 @@ fs.readdir(stylesDir, (err, files) => {
 
   let cssFiles = files.filter((file) => path.extname(file) === '.css');
   let cssData = '';
-
+  console.log(cssFiles);
   cssFiles.forEach((file, index) => {
     fs.readFile(path.join(stylesDir, file), 'utf8', (err, data) => {
       if (err) {
@@ -22,7 +22,7 @@ fs.readdir(stylesDir, (err, files) => {
 
       cssData += data;
 
-      if (index === cssFiles.length - 1) {
+      if (index === cssFiles.length) {
         fs.writeFile(
           path.join(outputDir, outputFile),
           cssData,
