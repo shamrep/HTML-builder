@@ -21,7 +21,7 @@ rl.on('line', (input) => {
   fileStream.write(input + '\n');
 });
 
-process.on('SIGINT', () => {
+rl.on('SIGINT', () => {
   console.log('Bye!');
   process.exit();
 });
