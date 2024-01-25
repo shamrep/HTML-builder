@@ -1,26 +1,41 @@
 const fs = require('fs');
 const path = require('node:path');
-const distDir = path.join(__dirname, 'project-dist');
 const stylesDir = path.join(__dirname, 'styles');
+const outputDir = path.join(__dirname, 'project-dist');
+const outputFile = 'bundle.css';
 
-fs.readdir(stylesDir, (error, files) => {
-  if (error) {
-    console.log(error);
+fs.readdir(stylesDir, (err, files) => {
+  if (err) {
+    console.log(err);
+    return;
   }
 
-  let compiledData;
-  files.forEach((file) => {
-    if (path.extname(file) === '.css') {
-      const data = fs.readFileSync(path.join(stylesDir, file));
-      compiledData += data + '\n';
-    }
-  });
+  let cssFiles = files.filter((file) => path.extname(file) === '.css');
+  let cssData = '';
 
-  fs.writeFile(path.join(distDir, 'bundle.css'), compiledData, (error) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Styles were bundled into bundle.css');
-    }
+  cssFiles.forEach((file, index) => {
+    fs.readFile(path.join(stylesDir, file), 'utf8', (err, data) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      cssData += data;
+
+      if (index === cssFiles.length - 1) {
+        fs.writeFile(
+          path.join(outputDir, outputFile),
+          cssData,
+          'utf8',
+          (err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log('Styles are compiled.');
+          },
+        );
+      }
+    });
   });
 });
